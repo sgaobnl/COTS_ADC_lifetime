@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:28 AM
-Last modified: 1/9/2018 3:10:19 PM
+Last modified: Mon Feb 26 23:39:52 2018
 """
 
 #defaut setting for scientific caculation
@@ -94,14 +94,11 @@ class WIB_CTL:
         self.udp.write_reg_femb_checked (self.fembno, 9, 9)
 
     def Analog_SW_SET(self, SW = 0 ):
-        if (self.autoflg == True ):
-            if (SW == 0):
-                self.udp.write_reg_femb_checked (self.fembno, 0x11, 0)
-            else:
-                self.udp.write_reg_femb_checked (self.fembno, 0x11, 1)
-            time.sleep(1)
+        if (SW == 0):
+            self.udp.write_reg_femb_checked (self.fembno, 0x11, 0)
         else:
-            pass
+            self.udp.write_reg_femb_checked (self.fembno, 0x11, 1)
+        time.sleep(1)
 
     def ADC_SET(self, chn=0x0 ):
 #        #set sample rate
@@ -167,10 +164,7 @@ class WIB_CTL:
     def ADC_close(self ):
         chn_csn = 0xFFFF
         self.udp.write_reg_femb_checked (self.fembno, 13, chn_csn)
-        if (self.autoflg == True ):
-            self.udp.write_reg_femb_checked (self.fembno, 0x11, 0)
-        else:
-            pass
+        self.udp.write_reg_femb_checked (self.fembno, 0x11, 0)
 
     def selectasic_femb(self):
         self.udp.write_reg_wib (7, 0x80000000)
@@ -189,7 +183,7 @@ class WIB_CTL:
         self.udp.write_reg_wib (7, wib_asic)
         time.sleep(0.001)
 
-    def ADC_ACQ(self, savepath, t_sec=22, chn = 0 ):
+    def ADC_ACQ(self, savepath, t_sec=22, chn = 0, mode=1 ):
         self.MSPS = 2 #1MSPS
         adc_str = self.ADC_SET(chn=chn)
         self.selectasic_femb()
@@ -220,7 +214,10 @@ class WIB_CTL:
         else:
             val = long( (t_sec*smps)/(39) )
         timestampe =  datetime.now().strftime('%m%d%Y_%H%M%S')
-        rawfilep = savepath + "/" + adc_str + "_" + timestampe + ".bin"
+        if (mode == 1):
+            rawfilep = savepath + "/" + "LDO_" + adc_str + "_" + timestampe + ".bin"
+        else
+            rawfilep = savepath + "/" + "SMU_" + adc_str + "_" + timestampe + ".bin"
         print rawfilep
         rawdata = None
         rawdata = self.udp.get_rawdata_packets(val, self.jumbo_flag)
@@ -243,9 +240,8 @@ class WIB_CTL:
         self.asicno = 0
         self.femb_ver_id = 0x204
         self.MSPS = 1 #1 --> 2M, 2 --> 1 M
-        self.adc_sft_np = [2, 2, 2, 2,   2, 1, 1, 1,   1, 1, 1, 1,   1, 1, 1, 1]
-        self.adc_phase_np = [1, 1, 1, 1,   1, 0, 0, 0,   0, 0, 2, 2,   2, 2, 2, 2]
-        self.autoflg = False
+        self.adc_sft_np = [1, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2]
+        self.adc_phase_np = [3, 1, 1, 1,   1, 1, 1, 1,   1, 1, 1, 1,   1, 1, 1, 1]
 
 ###wib = WIB_CTL()
 ###wib.wib_init()
