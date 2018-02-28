@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:42 AM
-Last modified: Mon Feb 26 23:38:01 2018
+Last modified: Tue Feb 27 22:49:19 2018
 """
 
 #defaut setting for scientific caculation
@@ -31,7 +31,7 @@ from timeit import default_timer as timer
 from shutil import copyfile
 
 class LF_MEAS:
-   def gen_config(self, gen_chns):
+    def gen_config(self, gen_chns):
         gen_chn1 = gen_chns[0]
         gen_chn2 = gen_chns[1]
         self.gen.gen_set(chn=gen_chn1[0], wave_type=gen_chn1[1], freq=gen_chn1[2], \
@@ -52,8 +52,8 @@ class LF_MEAS:
         time.sleep(10)
 
     def gen_smu_config(self, smu_chns, gen_chns):
-        gen_config( gen_chns)
-        smu_config( smu_chns)
+        self.gen_config( gen_chns)
+        self.smu_config( smu_chns)
  
     def meas_init(self):
         print "Initazation start ..."
@@ -63,12 +63,12 @@ class LF_MEAS:
 
         self.wib.WIB_UDP_CTL(WIB_UDP_EN = True)
         self.wib.FEMB_INIT()
-        smu_chn1 = [1, 2.5, 50, 20, 10, 10, 25]
+        smu_chn1 = [1, 2.5, 50, 20, 120, 120, 25]
         smu_chn2 = [2, 1.8, 50, 20, 10, 10, 25]
         smu_chn3 = [3, 2.5, 50, 20, 10, 10, 25]
         smu_chns = [smu_chn1, smu_chn2, smu_chn3]
         gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
-        gen_chn2 = [2,"TRIangle", "1Hz", "1",   "0.6", "50" ]
+        gen_chn2 = [2,"TRIangle", "1Hz", "1",   "0.6", "INF" ]
         gen_chns = [gen_chn1, gen_chn2]
         self.gen_smu_config(smu_chns, gen_chns)
         print "Initazation DONE ..."
@@ -127,12 +127,11 @@ class LF_MEAS:
         except:
             pass
 
-
     def adc_meas(self,savepath,chn=0, vref=1.8, mode=1):
         print "ADC DNL/INL characterization start ..."
         print "Characterize ADC with power supply from LDO"
         print "Configurate Generator ..."
-        if (mode == self.LDO):
+        if (mode == self.mode_ldo):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
         elif (mode == self.mode_smu):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "5",   "INF"]
@@ -151,18 +150,17 @@ class LF_MEAS:
         time.sleep(5)
         print "ADC DNL/INL characterization DONE!"
 
-
     def cur_meas(self, savepath, t =60, mode=1):
-        if (mode == self.LDO):
+        if (mode == self.mode_ldo):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
         elif (mode == self.mode_smu):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "5",   "INF"]
         else:
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
 
-            gen_chn2 = [2,"TRIangle", "1Hz", "1",   "0.6", "50" ]
+        gen_chn2 = [2,"TRIangle", "1Hz", "1",   "0.6", "INF" ]
         gen_chns = [gen_chn1, gen_chn2]
-        self.gen_config(smu_chns, gen_chns)
+        self.gen_config(gen_chns)
         print "Configuration done, please wait for 30seconds..."
         time.sleep(30)
         print "Current Recording starts, will last %d minutes..."%(t/60)
@@ -179,7 +177,6 @@ class LF_MEAS:
         self.smuchn3_recf =  "SMU_CHN3_Rec.csv"
         self.mode_ldo = 1 
         self.mode_smu = 2 
-
 
     def meas_close(self):
         print "Close..."

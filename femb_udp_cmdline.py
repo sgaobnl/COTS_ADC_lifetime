@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:35 AM
-Last modified: 12/22/2017 11:11:37 AM
+Last modified: Tue Feb 27 22:50:31 2018
 """
 
 #defaut setting for scientific caculation
@@ -513,14 +513,3 @@ class FEMB_UDP:
         self.UDPFEMB3_PORT_RREG =     32065
         self.UDPFEMB3_PORT_RREGRESP = 32066
 
-#wib = FEMB_UDP () 
-#a = wib.read_reg(31) 
-#print hex(a)
-#a = wib.write_reg(31,0xefa) 
-#a = wib.read_reg(31) 
-#print hex(a)
-#a = wib.read_reg_femb(3,13) 
-#print hex(a)
-#wib.write_reg_femb(3,13,3) 
-#a = wib.read_reg_femb(3,13) 
-#print hex(a)

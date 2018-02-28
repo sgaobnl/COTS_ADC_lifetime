@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:28 AM
-Last modified: Mon Feb 26 23:39:52 2018
+Last modified: Tue Feb 27 22:49:27 2018
 """
 
 #defaut setting for scientific caculation
@@ -193,7 +193,10 @@ class WIB_CTL:
         else:
             val = long( (t_sec*smps)/(39) )
         timestampe =  datetime.now().strftime('%m%d%Y_%H%M%S')
-        rawfilep = savepath + "/" + adc_str + "_" + timestampe + ".bin"
+        if (mode == 1):
+            rawfilep = savepath + "/" + "LDO_" + adc_str + "_" + timestampe + ".bin"
+        else:
+            rawfilep = savepath + "/" + "SMU_" + adc_str + "_" + timestampe + ".bin"
         print rawfilep
         rawdata = None
         rawdata = self.udp.get_rawdata_packets(val, self.jumbo_flag)
@@ -216,7 +219,7 @@ class WIB_CTL:
         timestampe =  datetime.now().strftime('%m%d%Y_%H%M%S')
         if (mode == 1):
             rawfilep = savepath + "/" + "LDO_" + adc_str + "_" + timestampe + ".bin"
-        else
+        else:
             rawfilep = savepath + "/" + "SMU_" + adc_str + "_" + timestampe + ".bin"
         print rawfilep
         rawdata = None
@@ -243,11 +246,3 @@ class WIB_CTL:
         self.adc_sft_np = [1, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2]
         self.adc_phase_np = [3, 1, 1, 1,   1, 1, 1, 1,   1, 1, 1, 1,   1, 1, 1, 1]
 
-###wib = WIB_CTL()
-###wib.wib_init()
-#####wib.WIB_UDP_CTL(WIB_UDP_EN = False)
-###wib.WIB_UDP_CTL(WIB_UDP_EN = True)
-#######wib.FEMB_STREAM_CTL()
-###wib.FEMB_INIT()
-###wib.ADC_ACQ(savepath="d:/",  t_sec=22 )
-####wib.WIB_UDP_CTL(WIB_UDP_EN = False)

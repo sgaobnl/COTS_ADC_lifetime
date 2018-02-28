@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 11/5/2017 10:13:42 AM
+Last modified: Tue Feb 27 22:49:50 2018
 """
 
 #defaut setting for scientific caculation
@@ -140,6 +140,5 @@ def raw_convertor_peak(raw_data, smps, jumbo_flag=True):
         chn_peakn = None
         
     return  chn_data, feed_loc, chn_peakp, chn_peakn
-
 
 
