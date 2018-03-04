@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 6:39:06 PM
-Last modified: Sun Mar  4 09:31:20 2018
+Last modified: Sun Mar  4 09:50:14 2018
 """
 
 #defaut setting for scientific caculation
@@ -429,14 +429,14 @@ ps_flg="SMU"
 msps = 2
 adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
 dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
-inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
+#inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
 #adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
 #adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
 sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no, ps_flg = ps_flg)
 msps = 1
 adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
 dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
-inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
+#inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
 #adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
 #adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
 sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no, ps_flg = ps_flg)
