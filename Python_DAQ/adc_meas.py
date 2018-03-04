@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:42 AM
-Last modified: Tue Feb 27 22:49:19 2018
+Last modified: Sun Mar  4 08:59:06 2018
 """
 
 #defaut setting for scientific caculation
@@ -133,7 +133,7 @@ class LF_MEAS:
         print "Configurate Generator ..."
         if (mode == self.mode_ldo):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
-        elif (mode == self.mode_smu):
+        elif (mode == self.mode_smu_nor) or (mode == self.mode_smu_str):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "5",   "INF"]
         else:
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
@@ -153,7 +153,7 @@ class LF_MEAS:
     def cur_meas(self, savepath, t =60, mode=1):
         if (mode == self.mode_ldo):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
-        elif (mode == self.mode_smu):
+        elif (mode == self.mode_smu_nor) or (mode == self.mode_smu_str):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "5",   "INF"]
         else:
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
@@ -175,8 +175,9 @@ class LF_MEAS:
         self.smuchn1_recf =  "SMU_CHN1_Rec.csv"
         self.smuchn2_recf =  "SMU_CHN2_Rec.csv"
         self.smuchn3_recf =  "SMU_CHN3_Rec.csv"
-        self.mode_ldo = 1 
-        self.mode_smu = 2 
+        self.mode_ldo = 0 
+        self.mode_smu_nor = 1 
+        self.mode_smu_str = 2 
 
     def meas_close(self):
         print "Close..."
