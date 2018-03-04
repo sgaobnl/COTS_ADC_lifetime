@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:01 AM
-Last modified: Wed Feb 28 00:25:27 2018
+Last modified: Sat Mar  3 20:38:43 2018
 """
 #IO1717
 import os
@@ -15,6 +15,8 @@ import sys
 from adc_meas import LF_MEAS
 
 lfm = LF_MEAS()
+lfm.gen.ADDR = u'USB0::0x0957::0x5707::MY53801762::INSTR' #need change
+lfm.msu.ADDR = u'USB0::0x0957::0x4118::MY57070006::INSTR' #need change
 
 def one_lf_cycle(savepath, t_hr= 1, chn=0, Vstress = 5.5):
     t_sec = t_hr * 3600
@@ -39,50 +41,6 @@ def one_lf_cycle(savepath, t_hr= 1, chn=0, Vstress = 5.5):
         lfm.cur_meas(savepath, t = stress_1hr*3600, mode=lfm.mode_smu)
         lfm.adc_meas(savepath,chn=0, vref=Vstress, mode=lfm.mode_smu)
     print "Present lifetime cycle done... "
-####chk0227####    print "Characterize ADC with power supply from MSU"
-####chk0227####    smu_chn1 = [1, 6, 50, 20, 120, 120, 25]
-####chk0227####    smu_chn2 = [2, 6, 50, 20, 10, 10, 25]
-####chk0227####    smu_chn3 = [3, 6, 50, 20, 10, 10, 25]
-####chk0227####    smu_chns = [smu_chn1, smu_chn2, smu_chn3]
-####chk0227####    lfm.smu_config(smu_chns)
-####chk0227####    lfm.cur_meas(savepath, t = 300, mode=lfm.mode_smu)
-####chk0227####    lfm.adc_meas(savepath,chn=0, vref=6, mode=lfm.mode_smu)
-####chk0227####
-####chk0227####    print "Characterize ADC with power supply from MSU"
-####chk0227####    smu_chn1 = [1, 5.5, 50, 20, 120, 120, 25]
-####chk0227####    smu_chn2 = [2, 5.5, 50, 20, 10, 10, 25]
-####chk0227####    smu_chn3 = [3, 5.5, 50, 20, 10, 10, 25]
-####chk0227####    smu_chns = [smu_chn1, smu_chn2, smu_chn3]
-####chk0227####    lfm.smu_config(smu_chns)
-####chk0227####    lfm.cur_meas(savepath, t = 300, mode=lfm.mode_smu)
-####chk0227####    lfm.adc_meas(savepath,chn=0, vref=5.5, mode=lfm.mode_smu)
-####chk0227####
-####chk0227####    print "Characterize ADC with power supply from MSU"
-####chk0227####    smu_chn1 = [1, 5, 50, 20, 120, 120, 25]
-####chk0227####    smu_chn2 = [2, 5, 50, 20, 10, 10, 25]
-####chk0227####    smu_chn3 = [3, 5, 50, 20, 10, 10, 25]
-####chk0227####    smu_chns = [smu_chn1, smu_chn2, smu_chn3]
-####chk0227####    lfm.smu_config(smu_chns)
-####chk0227####    lfm.cur_meas(savepath, t = 300, mode=lfm.mode_smu)
-####chk0227####    lfm.adc_meas(savepath,chn=0, vref=5, mode=lfm.mode_smu)
-####chk0227####
-####chk0227####    print "Characterize ADC with power supply from MSU"
-####chk0227####    smu_chn1 = [1, 4, 50, 20, 120, 120, 25]
-####chk0227####    smu_chn2 = [2, 4, 50, 20, 10, 10, 25]
-####chk0227####    smu_chn3 = [3, 4, 50, 20, 10, 10, 25]
-####chk0227####    smu_chns = [smu_chn1, smu_chn2, smu_chn3]
-####chk0227####    lfm.smu_config(smu_chns)
-####chk0227####    lfm.cur_meas(savepath, t = 300, mode=lfm.mode_smu)
-####chk0227####    lfm.adc_meas(savepath,chn=0, vref=4, mode=lfm.mode_smu)
-####chk0227####
-####chk0227####    print "Characterize ADC with power supply from MSU"
-####chk0227####    smu_chn1 = [1, 3, 50, 20, 120, 120, 25]
-####chk0227####    smu_chn2 = [2, 3, 50, 20, 10, 10, 25]
-####chk0227####    smu_chn3 = [3, 3, 50, 20, 10, 10, 25]
-####chk0227####    smu_chns = [smu_chn1, smu_chn2, smu_chn3]
-####chk0227####    lfm.smu_config(smu_chns)
-####chk0227####    lfm.cur_meas(savepath, t = 300, mode=lfm.mode_smu)
-####chk0227####    lfm.adc_meas(savepath,chn=0, vref=3, mode=lfm.mode_smu)
 
 lf_hours = [1,1,2,2,2,2, 4,4,4,4, 4,4,4,4,8,8,8,8, 8,8,8,8, 8,8,8,8, 8,8,8,8,\
             16, 16, 16, 16,  16, 16, 16, 16, 16, 16, 16, 16,  16, 16, 16, 16,\
@@ -128,8 +86,6 @@ for lf_hr in lf_hours:
         break
     else:
         print "Have been stressed %d hours"%stress_hours
-
-####chk0227####   break
 
 lfm.meas_close()
 
