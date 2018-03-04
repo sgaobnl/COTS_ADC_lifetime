@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 6:39:06 PM
-Last modified: 3/3/2018 10:52:35 PM
+Last modified: Sun Mar  4 09:31:20 2018
 """
 
 #defaut setting for scientific caculation
@@ -29,7 +29,7 @@ import time
 #from datetime import datetime
 import datetime
 
-def lf_pfm_fs (result_f, chn, msps, pfm_pers, sft=1, phase=3):
+def lf_pfm_fs (result_f, chn, msps, pfm_pers, ps_flg = "LDO", sft=1, phase=3):
     for root, dirs, files in os.walk(result_f):
         break
     fns = []
@@ -39,7 +39,8 @@ def lf_pfm_fs (result_f, chn, msps, pfm_pers, sft=1, phase=3):
         pos3 = f.find("SFT"+format(sft,"1d"))
         pos4 = f.find("Phase"+format(phase,"1d"))
         pos5 = f.find(pfm_pers)
-        if ( pos1 >= 0 ) and ( pos2 >= 0) and (pos3 >=0 ) and (pos4 >=0 ) and (pos5 >=0 ) :
+        pos6 = f.find(ps_flg)
+        if ( pos1 >= 0 ) and ( pos2 >= 0) and (pos3 >=0 ) and (pos4 >=0 ) and (pos5 >=0 ) and (pos6 >=0 )  :
             fns.append(f)
 
     acq_tts = []
@@ -63,8 +64,8 @@ def lf_pfm_fs (result_f, chn, msps, pfm_pers, sft=1, phase=3):
     fns = fns_tmp
     return fns
 
-def adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = "AD7274_001"):
-    fns = lf_pfm_fs (result_f, chn, msps, pfm_pers, sft, phase)
+def adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = "LDO", dis_range=(-1,1), sft=1, phase=3, dut_no = "AD7274_001"):
+    fns = lf_pfm_fs (result_f, chn, msps, pfm_pers, ps_flg, sft, phase)
     #fns = sorted(fns,reverse=False)
 
     t_np = []
@@ -97,7 +98,7 @@ def adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range
     plt.ylabel("DC offset / mV ")
     plt.xlabel("Time of duration in LN2 under test / h ")
     plt.title ("%s: ADC DC offset vs. Time of duration in LN2"%dut_no)
-    plt.savefig(plot_f + "DC_offset_%dMSPS"%(msps) + ".png")
+    plt.savefig(plot_f + ps_flg + "_" + "DC_offset_%dMSPS"%(msps) + ".png")
     plt.close()
 
     plt.figure(figsize=(16,9))
@@ -110,7 +111,7 @@ def adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range
     plt.ylabel("Input voltage range / mV ")
     plt.xlabel("Time of duration in LN2 under test / h ")
     plt.title ("%s: ADC scale vs. Time of duration in LN2"%dut_no)
-    plt.savefig(plot_f + "ADC_scale_FFE_001_%dMSPS"%(msps) + ".png")
+    plt.savefig(plot_f + ps_flg + "_" + "ADC_scale_FFE_001_%dMSPS"%(msps) + ".png")
     plt.close()
 
     plt.figure(figsize=(16,9))
@@ -123,11 +124,11 @@ def adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range
     plt.ylabel("Input voltage range / mV ")
     plt.xlabel("Time of duration in LN2 under test / h ")
     plt.title ("%s: ADC scale vs. Time of duration in LN2"%dut_no)
-    plt.savefig(plot_f + "ADC_scale_001_FFE_%dMSPS"%(msps) + ".png")
+    plt.savefig(plot_f + ps_flg + "_" + "ADC_scale_001_FFE_%dMSPS"%(msps) + ".png")
     plt.close()
 
-def adc_error_plots (result_f, plot_f, chn, msps, pfm_pers = "_inl_r.npy", dis_range=(-1,1), sft=1, phase=3, label = "INL", dut_no = "AD7274_001"):
-    fns = lf_pfm_fs (result_f, chn, msps, pfm_pers, sft, phase)
+def adc_error_plots (result_f, plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg="LDO", dis_range=(-1,1), sft=1, phase=3, label = "INL", dut_no = "AD7274_001"):
+    fns = lf_pfm_fs (result_f, chn, msps, pfm_pers, ps_flg, sft, phase)
 
     plt.figure(figsize=(16,9))
     clor_np = ['b', 'c', 'm', 'y', 'k'] 
@@ -164,7 +165,7 @@ def adc_error_plots (result_f, plot_f, chn, msps, pfm_pers = "_inl_r.npy", dis_r
     plt.ylabel("%s ERROR / LSB"%label)
     plt.title("%s: "%dut_no +label)
     plt.grid()
-    plt.savefig(plot_f + "%s_%dMSPS_performance"%(label,msps) + ".png")
+    plt.savefig(plot_f + ps_flg + "_" + "%s_%dMSPS_performance"%(label,msps) + ".png")
     plt.close()
     np.save(result_f + fns[0][0:(fns[0].find("Phase")+7)] + pfm_pers[0:-4] +  "%s_t_mean_std"%label, t_mean_stds)
 
@@ -185,8 +186,8 @@ def adc_error_plots (result_f, plot_f, chn, msps, pfm_pers = "_inl_r.npy", dis_r
     pct_label = label
     return pct_pfmchn, pct_msps, avg_hours, pct_pfmmean, pct_pfmstd, pct_label, avg_mpfms, avg_spfms, avg_times
 
-def adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = "AD7274_001"):
-    fns = lf_pfm_fs (result_f, chn, msps, pfm_pers, sft, phase)
+def adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = "LDO", dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = "AD7274_001"):
+    fns = lf_pfm_fs (result_f, chn, msps, pfm_pers, ps_flg, sft, phase)
     plt.figure(figsize=(16,9))
     clor_np = ['b', 'c', 'm', 'y', 'k'] 
 
@@ -217,12 +218,12 @@ def adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", di
     plt.ylabel("Number of Codes (%d codes in total)"%(0xFFE))
     plt.title("%s: "%dut_no +label)
     plt.grid()
-    plt.savefig(plot_f + "%s_%dMSPS_distribution_histogram"%(label,msps) + ".png")
+    plt.savefig(plot_f + ps_flg + "_" + "%s_%dMSPS_distribution_histogram"%(label,msps) + ".png")
     plt.close()
 
 
 
-def sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = "AD7274_001"):
+def sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = "AD7274_001", ps_flg = "LDO"):
     plt.figure(figsize=(12,8)) 
     ax1 = plt.subplot2grid((1, 1), (0, 0))
     dnl_0h = "Sigma(DNL) @ 0h = %f "%dnl_pcts[7][0]
@@ -240,7 +241,7 @@ def sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = "AD7274_001"):
     ax2.set_ylim([dnl_pcts[7][0]*0.5, dnl_pcts[7][0]*2.5])
 
     plt.title ("%s: Sigma of %s vs. Time of duration in LN2"%(dut_no, dnl_pcts[5]))
-    plt.savefig(plot_f + "%s_%dMSPS_vs_time_of_duration_LSB"%(dnl_pcts[5], dnl_pcts[1]) + ".png")
+    plt.savefig(plot_f + ps_flg + "_" + "%s_%dMSPS_vs_time_of_duration_LSB"%(dnl_pcts[5], dnl_pcts[1]) + ".png")
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
     plt.close()
 
@@ -408,21 +409,39 @@ else:
         print "Cannot make the folder!"
         raise
 
+ps_flg="LDO"
 msps = 2
-adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
-dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
-inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
-#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
-#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
-sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no)
-
+adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
+inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
+adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no, ps_flg = ps_flg)
 msps = 1
-adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
-dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
-inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
-#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
-#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
-sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no)
+adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
+inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
+adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no, ps_flg = ps_flg)
+
+ps_flg="SMU"
+msps = 2
+adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
+inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
+#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no, ps_flg = ps_flg)
+msps = 1
+adcdnl_histo_plots (result_f, plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+dnl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_dnl_r.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, label = "DNL", dut_no = dut_no)
+inl_pcts = adc_error_plots (result_f,plot_f, chn, msps, pfm_pers = "_inl_r.npy", ps_flg = ps_flg, dis_range=(-2,1), sft=1, phase=3, label = "INL", dut_no = dut_no)
+#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+#adc_v_plots (result_f, plot_f, chn, msps, pfm_pers = "_Vinfo.npy", ps_flg = ps_flg, dis_range=(-1,1), sft=1, phase=3, dut_no = dut_no)
+sigma_dnl_plot (result_f, plot_f, dnl_pcts, dut_no = dut_no, ps_flg = ps_flg)
+#
+
 #
 ivrefnor, ivccnor, ivrefstr, ivccstr=read_msu(result_f)
 irefnor_pct  = msuavg_to_pct(cinfo=ivrefnor)
