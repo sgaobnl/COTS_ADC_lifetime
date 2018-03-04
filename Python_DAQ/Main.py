@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:01 AM
-Last modified: Sat Mar  3 20:38:43 2018
+Last modified: Sat Mar  3 20:43:45 2018
 """
 #IO1717
 import os
@@ -17,6 +17,12 @@ from adc_meas import LF_MEAS
 lfm = LF_MEAS()
 lfm.gen.ADDR = u'USB0::0x0957::0x5707::MY53801762::INSTR' #need change
 lfm.msu.ADDR = u'USB0::0x0957::0x4118::MY57070006::INSTR' #need change
+
+#set shift and phase for AD7274
+chn0sft = 1 # normally don't need change
+lfm.wib.adc_sft_np = [chn0sft, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2]
+chn0pha = 3  # normally don't need change
+lfm.wib.adc_phase_np = [chn0pha, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2,   2, 2, 2, 2]
 
 def one_lf_cycle(savepath, t_hr= 1, chn=0, Vstress = 5.5):
     t_sec = t_hr * 3600
