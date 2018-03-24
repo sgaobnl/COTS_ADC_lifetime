@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 6:39:06 PM
-Last modified: 3/3/2018 9:52:06 PM
+Last modified: 3/21/2018 1:13:26 PM
 """
 
 #defaut setting for scientific caculation
@@ -203,7 +203,7 @@ def cur_to_npy(rawpath, pfm_f):
     np.save(rawpath+pfm_f+"MSU_MEAS", cinfo)
 
 
-rawpath = "D:/COTS_ADC_LF/Rawdata/AD7274_009/"
+rawpath = "D:/COTS_ADC_LF/Rawdata/AD7274_012/"
 pfm_f = "pfm_results/"
 
 for root, dirs, files in os.walk(rawpath):

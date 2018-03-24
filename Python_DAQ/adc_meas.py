@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:42 AM
-Last modified: Tue Feb 27 22:49:19 2018
+Last modified: 3/14/2018 6:33:46 PM
 """
 
 #defaut setting for scientific caculation
@@ -133,7 +133,7 @@ class LF_MEAS:
         print "Configurate Generator ..."
         if (mode == self.mode_ldo):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
-        elif (mode == self.mode_smu):
+        elif (mode == self.mode_smu_nor) or (mode == self.mode_smu_str):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "5",   "INF"]
         else:
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
@@ -150,15 +150,18 @@ class LF_MEAS:
         time.sleep(5)
         print "ADC DNL/INL characterization DONE!"
 
-    def cur_meas(self, savepath, t =60, mode=1):
+    def cur_meas(self, savepath, t =60, mode=1, Vref=1.8):
         if (mode == self.mode_ldo):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
-        elif (mode == self.mode_smu):
+        elif (mode == self.mode_smu_nor) or (mode == self.mode_smu_str):
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "5",   "INF"]
         else:
             gen_chn1 = [1,"DC",       "DEF"  , "DEF", "0",   "INF"]
 
-        gen_chn2 = [2,"TRIangle", "1Hz", "1",   "0.6", "INF" ]
+        genamp = str(Vref)
+        genoft = str(Vref/2.0)
+
+        gen_chn2 = [2,"TRIangle", "1Hz", genamp,   genoft, "INF" ]
         gen_chns = [gen_chn1, gen_chn2]
         self.gen_config(gen_chns)
         print "Configuration done, please wait for 30seconds..."
@@ -175,8 +178,9 @@ class LF_MEAS:
         self.smuchn1_recf =  "SMU_CHN1_Rec.csv"
         self.smuchn2_recf =  "SMU_CHN2_Rec.csv"
         self.smuchn3_recf =  "SMU_CHN3_Rec.csv"
-        self.mode_ldo = 1 
-        self.mode_smu = 2 
+        self.mode_ldo = 0 
+        self.mode_smu_nor = 1 
+        self.mode_smu_str = 2 
 
     def meas_close(self):
         print "Close..."

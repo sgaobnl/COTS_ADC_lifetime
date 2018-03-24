@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 12/22/2017 11:11:28 AM
-Last modified: Tue Feb 27 22:49:27 2018
+Last modified: Sun Mar  4 08:57:34 2018
 """
 
 #defaut setting for scientific caculation
@@ -183,7 +183,7 @@ class WIB_CTL:
         self.udp.write_reg_wib (7, wib_asic)
         time.sleep(0.001)
 
-    def ADC_ACQ(self, savepath, t_sec=22, chn = 0, mode=1 ):
+    def ADC_ACQ(self, savepath, t_sec=22, chn = 0, mode=0 ):
         self.MSPS = 2 #1MSPS
         adc_str = self.ADC_SET(chn=chn)
         self.selectasic_femb()
@@ -193,7 +193,7 @@ class WIB_CTL:
         else:
             val = long( (t_sec*smps)/(39) )
         timestampe =  datetime.now().strftime('%m%d%Y_%H%M%S')
-        if (mode == 1):
+        if (mode == 0):
             rawfilep = savepath + "/" + "LDO_" + adc_str + "_" + timestampe + ".bin"
         else:
             rawfilep = savepath + "/" + "SMU_" + adc_str + "_" + timestampe + ".bin"
@@ -217,7 +217,7 @@ class WIB_CTL:
         else:
             val = long( (t_sec*smps)/(39) )
         timestampe =  datetime.now().strftime('%m%d%Y_%H%M%S')
-        if (mode == 1):
+        if (mode == 0):
             rawfilep = savepath + "/" + "LDO_" + adc_str + "_" + timestampe + ".bin"
         else:
             rawfilep = savepath + "/" + "SMU_" + adc_str + "_" + timestampe + ".bin"
